@@ -3,7 +3,7 @@
 #ifndef CLIENT_HPP
 #define CLIENT_HPP
 
-#define BREAK_CRC false
+#define BREAK_CRC true
 
 
 //Infinite cycle for catching messages from

@@ -1,6 +1,8 @@
 #ifndef SERVER_HPP
 #define SERVER_HPP
 
+#define MIN(x,y) x<y?x:y
+
 class Server{
 private:
 	int sockfd, newsockfd, portno, pid, sockClient;
@@ -48,6 +50,7 @@ public:
 	//Constructor
 	//Get port and pipe write descriptor
 	Server::Server(int port, int pipefd) : portno(port), pipeWrite(pipefd), tryCounter(1) {
+
 
 		//Generate table of crc values
 		crcGenTable(crc8Table);
@@ -170,6 +173,13 @@ public:
 				std::cout<<"*Status from <"<<msg.szSenderIp<<"> : "<<msg.szMessage<<"*"<<std::endl;
 				if(strcmp(msg.szMessage.c_str(), "bad crc") == 0){
 					if(tryCounter < 16){ //if less than 16 tries
+						//exp delay
+						srand(time(NULL));
+						//usleep( rand() % static_cast<int>(pow(2, MIN(tryCounter,10))) );
+						int delay = rand() % static_cast<int>(pow(2, MIN(tryCounter,10)));
+						usleep(delay);
+						std::cout<<"Delay is "<<delay<<std::endl;
+						//resend prev message
 						sendForward("resend\0");
 						tryCounter++;
 						std::cout<<"Tries : "<<tryCounter<<std::endl;

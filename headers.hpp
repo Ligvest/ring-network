@@ -7,6 +7,9 @@
 #include <string.h> //strcat(), memset()...
 #include <arpa/inet.h> //inet_ntoa()
 #include <netdb.h> //hostent, gethostbyname()
+#include <cstdlib> // srand(), rand()
+#include <ctime> //time()
+#include <cmath> // pow()
 #include "bitstaffing.hpp"
 #include "myerror.hpp"
 #include "crc8.hpp"
