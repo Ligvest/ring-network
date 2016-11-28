@@ -3,6 +3,8 @@
 #ifndef CLIENT_HPP
 #define CLIENT_HPP
 
+#define BREAK_CRC false
+
 
 //Infinite cycle for catching messages from
 //our server to send it forward to a next node	
@@ -148,7 +150,9 @@ public:
 						(const uint8_t*)(message),
 						strlen(message));
 //breaking crc
+			if(BREAK_CRC)
 			crc++;
+
 			strcat(buffer, std::to_string(crc).c_str());
 			strcat(buffer, "\n");
 			strcat(buffer, message);
@@ -203,6 +207,9 @@ public:
 				bitsSent = write(client->sockfd, client->prevBuf, strlen(client->prevBuf));
 				if (bitsSent < 0)
 					error("ERROR writing to socket");
+			} else if(strcmp(buffer, "16tries") == 0){
+				//If was 16 unsuccessful tries to resend prev buffer
+				std::cout<<"Tries limit has been exceeded"<<std::endl;			
 			} else {
 				//Send message/forward
 				bitsSent = write(client->sockfd, buffer, strlen(buffer));

@@ -9,6 +9,7 @@ private:
     struct sockaddr_in serv_addr;
 	int pipeWrite;
 	uint8_t crc8Table[256];
+	int tryCounter;
 
 
 public:
@@ -46,7 +47,7 @@ public:
 
 	//Constructor
 	//Get port and pipe write descriptor
-	Server::Server(int port, int pipefd) : portno(port), pipeWrite(pipefd) {
+	Server::Server(int port, int pipefd) : portno(port), pipeWrite(pipefd), tryCounter(1) {
 
 		//Generate table of crc values
 		crcGenTable(crc8Table);
@@ -168,7 +169,14 @@ public:
 				//Show sender's ip and message
 				std::cout<<"*Status from <"<<msg.szSenderIp<<"> : "<<msg.szMessage<<"*"<<std::endl;
 				if(strcmp(msg.szMessage.c_str(), "bad crc") == 0){
-					sendForward("resend\0");				
+					if(tryCounter < 16){ //if less than 16 tries
+						sendForward("resend\0");
+						tryCounter++;
+						std::cout<<"Tries : "<<tryCounter<<std::endl;
+					} else {
+						sendForward("16tries\0");
+						tryCounter = 1;
+					}
 				}
 			}
 		} else {
