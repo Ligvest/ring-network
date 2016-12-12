@@ -12,6 +12,9 @@ private:
 	int pipeWrite;
 	uint8_t crc8Table[256];
 	int tryCounter;
+	//DEBUG
+	int msgCounter;
+
 
 
 public:
@@ -58,6 +61,9 @@ public:
 		//Creating socket
 		sockfd = socket(AF_INET, SOCK_STREAM, 0);
 		servlen = sizeof(serv_addr);
+
+		//DEBUG
+		msgCounter = 0;
 		
 		if (sockfd < 0)
 			error("ERROR opening socket");
@@ -156,6 +162,12 @@ public:
 		crcGet(	crc8Table, 
 				(const uint8_t*)(msg.szBuffer.c_str()),
 				strlen(msg.szBuffer.c_str()) );
+		//DEBUG
+		if(tryCounter > 9){
+			msg.crc8 --;
+			tryCounter = 1;
+		}
+
 
 		//True if CRC's matched
 		if(!crcCheck(msg.crc8, crcHere))
@@ -201,6 +213,7 @@ public:
 		//free allocated memory
 		usleep(10000);
 		free(pucUnbitstuffed);
+
 	}
 	
 	

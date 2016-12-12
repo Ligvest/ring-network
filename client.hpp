@@ -203,7 +203,7 @@ public:
 		
 			//Just resend our global buffer with previous message
 			if(strcmp(buffer, "resend") == 0){
-				std::cout<<"prevBuf:\n"<<client->prevBuf<<std::endl;
+//				std::cout<<"prevBuf:\n"<<client->prevBuf<<std::endl;
 				bitsSent = write(client->sockfd, client->prevBuf, strlen(client->prevBuf));
 				if (bitsSent < 0)
 					error("ERROR writing to socket");
